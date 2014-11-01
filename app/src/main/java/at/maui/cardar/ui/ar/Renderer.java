@@ -64,7 +64,7 @@ public class Renderer implements CardboardView.StereoRenderer {
     private float[] mHeadView;
 
     private float[] mView;
-    private float[] mModelCube;
+    //private float[] mModelCube;
     private float[] mCamera;
     //private float[] mModelFloor;
     //private float[] mModelWall;
@@ -105,7 +105,7 @@ public class Renderer implements CardboardView.StereoRenderer {
 
         mGlPrograms = new int[2];
 
-        mModelCube = new float[16];
+        //mModelCube = new float[16];
         //mModelFloor = new float[16];
         //mModelWall = new float[16];
 
@@ -195,7 +195,7 @@ public class Renderer implements CardboardView.StereoRenderer {
 
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
-        Matrix.multiplyMM(mModelView, 0, mView, 0, mModelCube, 0);
+        //Matrix.multiplyMM(mModelView, 0, mView, 0, mModelCube, 0);
         Matrix.multiplyMM(mModelViewProjection, 0, eyeTransform.getPerspective(), 0, mModelView, 0);
         //drawCube();
 
@@ -333,8 +333,8 @@ public class Renderer implements CardboardView.StereoRenderer {
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
         // Object first appears directly in front of user
-        Matrix.setIdentityM(mModelCube, 0);
-        Matrix.translateM(mModelCube, 0, 0, 0, -mObjectDistance);
+        //Matrix.setIdentityM(mModelCube, 0);
+       //Matrix.translateM(mModelCube, 0, 0, 0, -mObjectDistance);
 
         //Matrix.setIdentityM(mModelFloor, 0);
         //Matrix.translateM(mModelFloor, 0, 0, -mFloorDepth, 0); // Floor appears below user
@@ -399,15 +399,15 @@ public class Renderer implements CardboardView.StereoRenderer {
         mObjectDistance = (float) Math.random() * 15 + 5;
         float objectScalingFactor = mObjectDistance / oldObjectDistance;
         Matrix.scaleM(rotationMatrix, 0, objectScalingFactor, objectScalingFactor, objectScalingFactor);
-        Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, mModelCube, 12);
+        //Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, mModelCube, 12);
 
         // Now get the up or down angle, between -20 and 20 degrees
         float angleY = (float) Math.random() * 80 - 40; // angle in Y plane, between -40 and 40
         angleY = (float) Math.toRadians(angleY);
         float newY = (float)Math.tan(angleY) * mObjectDistance;
 
-        Matrix.setIdentityM(mModelCube, 0);
-        Matrix.translateM(mModelCube, 0, posVec[0], newY, posVec[2]);
+        //Matrix.setIdentityM(mModelCube, 0);
+        //Matrix.translateM(mModelCube, 0, posVec[0], newY, posVec[2]);
     }
 
     /**
@@ -419,7 +419,7 @@ public class Renderer implements CardboardView.StereoRenderer {
         float[] objPositionVec = new float[4];
 
         // Convert object space to camera space. Use the headView from onNewFrame.
-        Matrix.multiplyMM(mModelView, 0, mHeadView, 0, mModelCube, 0);
+        //Matrix.multiplyMM(mModelView, 0, mHeadView, 0, mModelCube, 0);
         Matrix.multiplyMV(objPositionVec, 0, mModelView, 0, initVec, 0);
 
         float pitch = (float)Math.atan2(objPositionVec[1], -objPositionVec[2]);
