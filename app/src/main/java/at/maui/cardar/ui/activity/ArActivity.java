@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.Log;
 
@@ -81,6 +82,109 @@ public class ArActivity extends CardboardActivity {
 
         s.setSpeechResultListener(new SpeechResultListener());
         s.setMaxRecordingTime(Integer.MAX_VALUE);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        final SpeechRecognizer speechRec = SpeechRecognizer.createSpeechRecognizer(this);
+        final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "VoiceIME");
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 3000L);
+
+        speechRec.startListening(intent);
+        speechRec.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float v) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] bytes) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+
+            }
+
+            @Override
+            public void onError(int i) {
+
+            }
+
+            @Override
+            public void onResults(Bundle bundle) {
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                speechRec.stopListening();
+                speechRec.setRecognitionListener(this);
+                speechRec.startListening(intent);
+            }
+
+            public void onPartialResults(Bundle partialResults) {
+                // WARNING: The following is specific to Google Voice Search
+                ArrayList<String> results =
+                        partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                String b = "";
+                if (results != null)
+                    for (String p : results) {
+                        b += p;
+                    }
+               overlayView.show3DToast(b);
+            }
+
+            @Override
+            public void onEvent(int i, Bundle bundle) {
+
+            }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

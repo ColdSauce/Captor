@@ -50,14 +50,14 @@ public class CardboardOverlayView extends LinearLayout {
 
     public void show3DToast(String message) {
         setText(message);
-        setTextAlpha(1f);
-        mTextFadeAnimation.setAnimationListener(new EndAnimationListener() {
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                setTextAlpha(0f);
-            }
-        });
-        startAnimation(mTextFadeAnimation);
+//        setTextAlpha(1f);
+//        mTextFadeAnimation.setAnimationListener(new EndAnimationListener() {
+//            @Override
+//            public void onAnimationEnd(Animation animation) {
+//                setTextAlpha(0f);
+//            }
+//        });
+//        startAnimation(mTextFadeAnimation);
     }
 
     private abstract class EndAnimationListener implements Animation.AnimationListener {
