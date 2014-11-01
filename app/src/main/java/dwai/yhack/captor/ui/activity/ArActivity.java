@@ -1,0 +1,213 @@
+package dwai.yhack.captor.ui.activity;
+
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Vibrator;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
+import android.util.Log;
+
+import com.att.android.speech.ATTSpeechActivity;
+import com.att.android.speech.ATTSpeechResult;
+import com.att.android.speech.ATTSpeechResultListener;
+import com.att.android.speech.ATTSpeechService;
+import com.google.vrtoolkit.cardboard.CardboardActivity;
+import com.google.vrtoolkit.cardboard.CardboardView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+
+import dwai.yhack.captor.R;
+import dwai.yhack.captor.ui.ar.Renderer;
+import dwai.yhack.captor.ui.widget.CardboardOverlayView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
+public class ArActivity extends CardboardActivity {
+
+    @InjectView(R.id.overlay)
+    CardboardOverlayView overlayView;
+
+    @InjectView(R.id.cardboard_view)
+    CardboardView cardboardView;
+    private String MY_ACTIVITY = "ARActivity";
+    private Renderer mRenderer;
+
+    private String oauthToken = null;
+    private ATTSpeechService s;
+    private Vibrator mVibrator;
+    private int mScore = 0;
+    private static final int SPEECH_REQUEST_CODE = 42;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_ar);
+
+        // Inject views
+        ButterKnife.inject(this);
+        s = ATTSpeechService.getSpeechService(this);
+
+        mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+        // Associate a CardboardView.StereoRenderer with cardboardView.
+        mRenderer = new Renderer(this);
+        cardboardView.setRenderer(mRenderer);
+
+        // Associate the cardboardView with this activity.
+        setCardboardView(cardboardView);
+
+        overlayView.show3DToast("Welcome to Captor!");
+
+        validateOAuth();
+        Log.d(MY_ACTIVITY, oauthToken + "");
+        s.setSpeechContext("General");
+        // Set the OAuth token that was fetched in the background.
+
+        // Specify the speech context for this app.
+
+
+        s.setXArgs(
+                Collections.singletonMap("ClientScreen", "main"));
+
+
+        s.setSpeechResultListener(new SpeechResultListener());
+        s.setMaxRecordingTime(Integer.MAX_VALUE);
+
+
+        final SpeechRecognizer speechRec = SpeechRecognizer.createSpeechRecognizer(this);
+        final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "VoiceIME");
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 3000L);
+
+        speechRec.startListening(intent);
+        speechRec.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle bundle) {
+
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+
+            }
+
+            @Override
+            public void onRmsChanged(float v) {
+
+            }
+
+            @Override
+            public void onBufferReceived(byte[] bytes) {
+
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+
+            }
+
+            @Override
+            public void onError(int i) {
+
+            }
+
+            @Override
+            public void onResults(Bundle bundle) {
+                try {
+                    Thread.sleep(100);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                speechRec.stopListening();
+                speechRec.setRecognitionListener(this);
+                speechRec.startListening(intent);
+            }
+
+            public void onPartialResults(Bundle partialResults) {
+                // WARNING: The following is specific to Google Voice Search
+                ArrayList<String> results =
+                        partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                String b = "";
+                if (results != null)
+                    for (String p : results) {
+                        b += p;
+                    }
+               overlayView.show3DToast(b);
+            }
+
+            @Override
+            public void onEvent(int i, Bundle bundle) {
+
+            }
+        });
+    }
+
+    public class SpeechResultListener implements ATTSpeechResultListener{
+
+        @Override
+        public void onResult(ATTSpeechResult attSpeechResult) {
+
+            Log.d(MY_ACTIVITY, attSpeechResult.getTextStrings().toString());
+        }
+    }
+
+    public void startL(){
+        s.startListening();
+
+    }
+
+    private void validateOAuth() {
+        SpeechAuth auth =
+                SpeechAuth.forService(SpeechConfig.oauthUrl(), SpeechConfig.oauthScope(),
+                        SpeechConfig.oauthKey(), SpeechConfig.oauthSecret());
+        auth.fetchTo(new OAuthResponseListener());
+    }
+
+    private class OAuthResponseListener implements SpeechAuth.Client {
+        public void
+        handleResponse(String token, Exception error) {
+            Log.d(MY_ACTIVITY,token);
+            if (token != null) {
+                oauthToken = token;
+
+                s.setBearerAuthToken(oauthToken);
+                startL();
+            } else {
+                Log.v("SimpleSpeech", "OAuth error: " + error);
+            }
+        }
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
+        if (requestCode == SPEECH_REQUEST_CODE) {
+            System.out.println("worked");
+            if (resultCode == RESULT_OK) {
+                // Retrieve text recognized from speech
+                ArrayList nbest = resultIntent.getStringArrayListExtra(ATTSpeechActivity.EXTRA_RESULT_TEXT_STRINGS);
+
+                if ((nbest != null) && (nbest.size() > 0)) {
+                    String text = nbest.get(0).toString();
+                    Log.v(MY_ACTIVITY, "Recognition result: " + text);
+                } else
+                    Log.v(MY_ACTIVITY, "Speech was silent or not recognized.");
+            } else if (resultCode == RESULT_CANCELED)
+                Log.v(MY_ACTIVITY, "User canceled.");
+            else {
+                String error = resultIntent.getStringExtra(ATTSpeechActivity.EXTRA_RESULT_ERROR_MESSAGE);
+                Log.v(MY_ACTIVITY, "Recognition failed with error: " + error);
+            }
+        }
+    }
+
+
+}

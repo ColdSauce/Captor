@@ -9,7 +9,7 @@
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true" />
-    <at.maui.cardar.ui.widget.CardboardOverlayView
+    <dwai.yhack.captor.ui.widget.CardboardOverlayView
         android:id="@+id/overlay"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
