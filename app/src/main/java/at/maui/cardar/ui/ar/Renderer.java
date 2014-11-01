@@ -36,7 +36,7 @@ public class Renderer implements CardboardView.StereoRenderer {
     private static final int COORDS_PER_VERTEX = 3;
 
     private static final float CAMERA_Z = 0.01f;
-    private static final float TIME_DELTA = 0.3f;
+    //private static final float TIME_DELTA = 0.3f;
 
     private static final float YAW_LIMIT = 0.12f;
     private static final float PITCH_LIMIT = 0.12f;
@@ -55,10 +55,10 @@ public class Renderer implements CardboardView.StereoRenderer {
     private FloatBuffer mWallColors;
     private FloatBuffer mWallNormals;
 
-    private FloatBuffer mCubeVertices;
-    private FloatBuffer mCubeColors;
-    private FloatBuffer mCubeFoundColors;
-    private FloatBuffer mCubeNormals;
+    //private FloatBuffer mCubeVertices;
+    //private FloatBuffer mCubeColors;
+    //private FloatBuffer mCubeFoundColors;
+    //private FloatBuffer mCubeNormals;
 
     // Head Position
     private float[] mHeadView;
@@ -128,7 +128,7 @@ public class Renderer implements CardboardView.StereoRenderer {
     public void onNewFrame(HeadTransform headTransform) {
 
         // Build the Model part of the ModelView matrix.
-        Matrix.rotateM(mModelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
+        //Matrix.rotateM(mModelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
 
         // Build the camera matrix and apply it to the ModelView.
         Matrix.setLookAtM(mCamera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -197,7 +197,7 @@ public class Renderer implements CardboardView.StereoRenderer {
         // for calculating cube position and light.
         Matrix.multiplyMM(mModelView, 0, mView, 0, mModelCube, 0);
         Matrix.multiplyMM(mModelViewProjection, 0, eyeTransform.getPerspective(), 0, mModelView, 0);
-        drawCube();
+        //drawCube();
 
 
         //Matrix.multiplyMM(mModelView, 0, mView, 0, mModelWall, 0);
@@ -216,7 +216,7 @@ public class Renderer implements CardboardView.StereoRenderer {
     }
 
 
-    public void drawCube() {
+    /* public void drawCube() {
         // This is not the floor!
         GLES20.glUniform1f(mIsFloorParam, 0f);
 
@@ -246,7 +246,7 @@ public class Renderer implements CardboardView.StereoRenderer {
         }
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
         checkGLError("Drawing cube");
-    }
+    } */
 
     public void drawWall() {
 
@@ -433,7 +433,7 @@ public class Renderer implements CardboardView.StereoRenderer {
     }
 
     private void initModels() {
-        ByteBuffer bbVertices = ByteBuffer.allocateDirect(DATA.CUBE_COORDS.length * 4);
+        /* ByteBuffer bbVertices = ByteBuffer.allocateDirect(DATA.CUBE_COORDS.length * 4);
         bbVertices.order(ByteOrder.nativeOrder());
         mCubeVertices = bbVertices.asFloatBuffer();
         mCubeVertices.put(DATA.CUBE_COORDS);
@@ -455,7 +455,7 @@ public class Renderer implements CardboardView.StereoRenderer {
         bbNormals.order(ByteOrder.nativeOrder());
         mCubeNormals = bbNormals.asFloatBuffer();
         mCubeNormals.put(DATA.CUBE_NORMALS);
-        mCubeNormals.position(0);
+        mCubeNormals.position(0); */
 
         // make a floor
         ByteBuffer bbFloorVertices = ByteBuffer.allocateDirect(DATA.FLOOR_COORDS.length * 4);
