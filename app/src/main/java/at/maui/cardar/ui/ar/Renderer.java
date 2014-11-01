@@ -47,9 +47,9 @@ public class Renderer implements CardboardView.StereoRenderer {
 
     private int[] mGlPrograms;
 
-    private FloatBuffer mFloorVertices;
-    private FloatBuffer mFloorColors;
-    private FloatBuffer mFloorNormals;
+    //private FloatBuffer mFloorVertices;
+    //private FloatBuffer mFloorColors;
+    //private FloatBuffer mFloorNormals;
 
     private FloatBuffer mWallVertices;
     private FloatBuffer mWallColors;
@@ -66,8 +66,8 @@ public class Renderer implements CardboardView.StereoRenderer {
     private float[] mView;
     private float[] mModelCube;
     private float[] mCamera;
-    private float[] mModelFloor;
-    private float[] mModelWall;
+    //private float[] mModelFloor;
+    //private float[] mModelWall;
     private float[] mModelViewProjection;
     private float[] mModelViewProjectionWall;
     private float[] mModelView;
@@ -106,8 +106,8 @@ public class Renderer implements CardboardView.StereoRenderer {
         mGlPrograms = new int[2];
 
         mModelCube = new float[16];
-        mModelFloor = new float[16];
-        mModelWall = new float[16];
+        //mModelFloor = new float[16];
+        //mModelWall = new float[16];
 
         mModelViewProjection = new float[16];
         mModelViewProjectionWall = new float[16];
@@ -208,7 +208,7 @@ public class Renderer implements CardboardView.StereoRenderer {
         drawWall();
 
         // Set mModelView for the floor, so we draw floor in the correct location
-        Matrix.multiplyMM(mModelView, 0, mView, 0, mModelFloor, 0);
+       // Matrix.multiplyMM(mModelView, 0, mView, 0, mModelFloor, 0);
         Matrix.multiplyMM(mModelViewProjection, 0, eyeTransform.getPerspective(), 0,
                 mModelView, 0);
         drawFloor(eyeTransform.getPerspective());
@@ -291,13 +291,13 @@ public class Renderer implements CardboardView.StereoRenderer {
         GLES20.glUniform1f(mIsFloorParam, 1f);
 
         // Set ModelView, MVP, position, normals, and color
-        GLES20.glUniformMatrix4fv(mModelParam, 1, false, mModelFloor, 0);
+        //GLES20.glUniformMatrix4fv(mModelParam, 1, false, mModelFloor, 0);
         GLES20.glUniformMatrix4fv(mModelViewParam, 1, false, mModelView, 0);
         GLES20.glUniformMatrix4fv(mModelViewProjectionParam, 1, false, mModelViewProjection, 0);
-        GLES20.glVertexAttribPointer(mPositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-                false, 0, mFloorVertices);
-        GLES20.glVertexAttribPointer(mNormalParam, 3, GLES20.GL_FLOAT, false, 0, mFloorNormals);
-        GLES20.glVertexAttribPointer(mColorParam, 4, GLES20.GL_FLOAT, false, 0, mFloorColors);
+        //GLES20.glVertexAttribPointer(mPositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
+        //        false, 0, mFloorVertices);
+        //GLES20.glVertexAttribPointer(mNormalParam, 3, GLES20.GL_FLOAT, false, 0, mFloorNormals);
+        //GLES20.glVertexAttribPointer(mColorParam, 4, GLES20.GL_FLOAT, false, 0, mFloorColors);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
         GLES20.glDisable(GLES20.GL_BLEND);
@@ -336,11 +336,11 @@ public class Renderer implements CardboardView.StereoRenderer {
         Matrix.setIdentityM(mModelCube, 0);
         Matrix.translateM(mModelCube, 0, 0, 0, -mObjectDistance);
 
-        Matrix.setIdentityM(mModelFloor, 0);
-        Matrix.translateM(mModelFloor, 0, 0, -mFloorDepth, 0); // Floor appears below user
+        //Matrix.setIdentityM(mModelFloor, 0);
+        //Matrix.translateM(mModelFloor, 0, 0, -mFloorDepth, 0); // Floor appears below user
 
-        Matrix.setIdentityM(mModelWall, 0);
-        Matrix.translateM(mModelWall, 0, 0, 0, -16f);
+        //Matrix.setIdentityM(mModelWall, 0);
+        //Matrix.translateM(mModelWall, 0, 0, 0, -16f);
 
         checkGLError("onSurfaceCreated");
     }
@@ -458,7 +458,7 @@ public class Renderer implements CardboardView.StereoRenderer {
         mCubeNormals.position(0); */
 
         // make a floor
-        ByteBuffer bbFloorVertices = ByteBuffer.allocateDirect(DATA.FLOOR_COORDS.length * 4);
+        /* ByteBuffer bbFloorVertices = ByteBuffer.allocateDirect(DATA.FLOOR_COORDS.length * 4);
         bbFloorVertices.order(ByteOrder.nativeOrder());
         mFloorVertices = bbFloorVertices.asFloatBuffer();
         mFloorVertices.put(DATA.FLOOR_COORDS);
@@ -474,7 +474,7 @@ public class Renderer implements CardboardView.StereoRenderer {
         bbFloorColors.order(ByteOrder.nativeOrder());
         mFloorColors = bbFloorColors.asFloatBuffer();
         mFloorColors.put(DATA.FLOOR_COLORS);
-        mFloorColors.position(0);
+        mFloorColors.position(0); */
 
         // make wall
         ByteBuffer bbWallVertices = ByteBuffer.allocateDirect(DATA.WALL_COORDS.length * 4);
