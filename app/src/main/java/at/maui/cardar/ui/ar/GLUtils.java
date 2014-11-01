@@ -10,9 +10,6 @@ import java.io.InputStreamReader;
 
 import timber.log.Timber;
 
-/**
- * Created by maui on 02.07.2014.
- */
 public class GLUtils {
     /**
      * Checks if we've had an error inside of OpenGL ES, and if so what that error is.

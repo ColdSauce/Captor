@@ -24,9 +24,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import at.maui.cardar.R;
 import timber.log.Timber;
 
-/**
- * Created by maui on 02.07.2014.
- */
 public class Renderer implements CardboardView.StereoRenderer {
 
     // We keep the light always position just above the user.
@@ -47,27 +44,15 @@ public class Renderer implements CardboardView.StereoRenderer {
 
     private int[] mGlPrograms;
 
-    //private FloatBuffer mFloorVertices;
-    //private FloatBuffer mFloorColors;
-    //private FloatBuffer mFloorNormals;
-
     private FloatBuffer mWallVertices;
     private FloatBuffer mWallColors;
     private FloatBuffer mWallNormals;
-
-    //private FloatBuffer mCubeVertices;
-    //private FloatBuffer mCubeColors;
-    //private FloatBuffer mCubeFoundColors;
-    //private FloatBuffer mCubeNormals;
 
     // Head Position
     private float[] mHeadView;
 
     private float[] mView;
-    //private float[] mModelCube;
     private float[] mCamera;
-    //private float[] mModelFloor;
-    //private float[] mModelWall;
     private float[] mModelViewProjection;
     private float[] mModelViewProjectionWall;
     private float[] mModelView;
@@ -105,10 +90,6 @@ public class Renderer implements CardboardView.StereoRenderer {
 
         mGlPrograms = new int[2];
 
-        //mModelCube = new float[16];
-        //mModelFloor = new float[16];
-        //mModelWall = new float[16];
-
         mModelViewProjection = new float[16];
         mModelViewProjectionWall = new float[16];
         mModelView = new float[16];
@@ -127,9 +108,6 @@ public class Renderer implements CardboardView.StereoRenderer {
     @Override
     public void onNewFrame(HeadTransform headTransform) {
 
-        // Build the Model part of the ModelView matrix.
-        //Matrix.rotateM(mModelCube, 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
-
         // Build the camera matrix and apply it to the ModelView.
         Matrix.setLookAtM(mCamera, 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 
@@ -146,26 +124,6 @@ public class Renderer implements CardboardView.StereoRenderer {
 
         // Apply the eye transformation to the camera.
         Matrix.multiplyMM(mView, 0, eyeTransform.getEyeView(), 0, mCamera, 0);
-
-        /*GLES20.glUseProgram(mGlPrograms[0]);
-
-        mPositionParam = GLES20.glGetAttribLocation(mGlPrograms[0], "vPosition");
-        mTextureCoordParam = GLES20.glGetAttribLocation(mGlPrograms[0], "vTexCoord");
-        mTextureParam = GLES20.glGetAttribLocation(mGlPrograms[0], "sTexture");
-
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextures[0]);
-        GLES20.glUniform1i(mTextureParam, 0);
-
-        GLES20.glVertexAttribPointer(mPositionParam, 2, GLES20.GL_FLOAT, false, 4*2, pVertex);
-        GLES20.glVertexAttribPointer(mTextureCoordParam, 2, GLES20.GL_FLOAT, false, 4*2, pTexCoord );
-        GLES20.glEnableVertexAttribArray(mPositionParam);
-        GLES20.glEnableVertexAttribArray(mTextureCoordParam);
-
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
-        GLES20.glFlush();
-
-        GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT);*/
 
         GLES20.glUseProgram(mGlPrograms[1]);
 
@@ -195,9 +153,7 @@ public class Renderer implements CardboardView.StereoRenderer {
 
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
-        //Matrix.multiplyMM(mModelView, 0, mView, 0, mModelCube, 0);
         Matrix.multiplyMM(mModelViewProjection, 0, eyeTransform.getPerspective(), 0, mModelView, 0);
-        //drawCube();
 
 
         //Matrix.multiplyMM(mModelView, 0, mView, 0, mModelWall, 0);
@@ -208,45 +164,11 @@ public class Renderer implements CardboardView.StereoRenderer {
         drawWall();
 
         // Set mModelView for the floor, so we draw floor in the correct location
-       // Matrix.multiplyMM(mModelView, 0, mView, 0, mModelFloor, 0);
         Matrix.multiplyMM(mModelViewProjection, 0, eyeTransform.getPerspective(), 0,
                 mModelView, 0);
         drawFloor(eyeTransform.getPerspective());
 
     }
-
-
-    /* public void drawCube() {
-        // This is not the floor!
-        GLES20.glUniform1f(mIsFloorParam, 0f);
-
-        // Set the Model in the shader, used to calculate lighting
-        GLES20.glUniformMatrix4fv(mModelParam, 1, false, mModelCube, 0);
-
-        // Set the ModelView in the shader, used to calculate lighting
-        GLES20.glUniformMatrix4fv(mModelViewParam, 1, false, mModelView, 0);
-
-        // Set the position of the cube
-        GLES20.glVertexAttribPointer(mPositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-                false, 0, mCubeVertices);
-
-        // Set the ModelViewProjection matrix in the shader.
-        GLES20.glUniformMatrix4fv(mModelViewProjectionParam, 1, false, mModelViewProjection, 0);
-
-        // Set the normal positions of the cube, again for shading
-        GLES20.glVertexAttribPointer(mNormalParam, 3, GLES20.GL_FLOAT,
-                false, 0, mCubeNormals);
-
-        if (isLookingAtObject()) {
-            GLES20.glVertexAttribPointer(mColorParam, 4, GLES20.GL_FLOAT, false,
-                    0, mCubeFoundColors);
-        } else {
-            GLES20.glVertexAttribPointer(mColorParam, 4, GLES20.GL_FLOAT, false,
-                    0, mCubeColors);
-        }
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 36);
-        checkGLError("Drawing cube");
-    } */
 
     public void drawWall() {
 
@@ -291,13 +213,8 @@ public class Renderer implements CardboardView.StereoRenderer {
         GLES20.glUniform1f(mIsFloorParam, 1f);
 
         // Set ModelView, MVP, position, normals, and color
-        //GLES20.glUniformMatrix4fv(mModelParam, 1, false, mModelFloor, 0);
         GLES20.glUniformMatrix4fv(mModelViewParam, 1, false, mModelView, 0);
         GLES20.glUniformMatrix4fv(mModelViewProjectionParam, 1, false, mModelViewProjection, 0);
-        //GLES20.glVertexAttribPointer(mPositionParam, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
-        //        false, 0, mFloorVertices);
-        //GLES20.glVertexAttribPointer(mNormalParam, 3, GLES20.GL_FLOAT, false, 0, mFloorNormals);
-        //GLES20.glVertexAttribPointer(mColorParam, 4, GLES20.GL_FLOAT, false, 0, mFloorColors);
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, 6);
 
         GLES20.glDisable(GLES20.GL_BLEND);
@@ -331,16 +248,6 @@ public class Renderer implements CardboardView.StereoRenderer {
         initWorldShader();
 
         GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-
-        // Object first appears directly in front of user
-        //Matrix.setIdentityM(mModelCube, 0);
-       //Matrix.translateM(mModelCube, 0, 0, 0, -mObjectDistance);
-
-        //Matrix.setIdentityM(mModelFloor, 0);
-        //Matrix.translateM(mModelFloor, 0, 0, -mFloorDepth, 0); // Floor appears below user
-
-        //Matrix.setIdentityM(mModelWall, 0);
-        //Matrix.translateM(mModelWall, 0, 0, 0, -16f);
 
         checkGLError("onSurfaceCreated");
     }
@@ -399,15 +306,11 @@ public class Renderer implements CardboardView.StereoRenderer {
         mObjectDistance = (float) Math.random() * 15 + 5;
         float objectScalingFactor = mObjectDistance / oldObjectDistance;
         Matrix.scaleM(rotationMatrix, 0, objectScalingFactor, objectScalingFactor, objectScalingFactor);
-        //Matrix.multiplyMV(posVec, 0, rotationMatrix, 0, mModelCube, 12);
 
         // Now get the up or down angle, between -20 and 20 degrees
         float angleY = (float) Math.random() * 80 - 40; // angle in Y plane, between -40 and 40
         angleY = (float) Math.toRadians(angleY);
         float newY = (float)Math.tan(angleY) * mObjectDistance;
-
-        //Matrix.setIdentityM(mModelCube, 0);
-        //Matrix.translateM(mModelCube, 0, posVec[0], newY, posVec[2]);
     }
 
     /**
@@ -419,7 +322,6 @@ public class Renderer implements CardboardView.StereoRenderer {
         float[] objPositionVec = new float[4];
 
         // Convert object space to camera space. Use the headView from onNewFrame.
-        //Matrix.multiplyMM(mModelView, 0, mHeadView, 0, mModelCube, 0);
         Matrix.multiplyMV(objPositionVec, 0, mModelView, 0, initVec, 0);
 
         float pitch = (float)Math.atan2(objPositionVec[1], -objPositionVec[2]);
@@ -433,48 +335,6 @@ public class Renderer implements CardboardView.StereoRenderer {
     }
 
     private void initModels() {
-        /* ByteBuffer bbVertices = ByteBuffer.allocateDirect(DATA.CUBE_COORDS.length * 4);
-        bbVertices.order(ByteOrder.nativeOrder());
-        mCubeVertices = bbVertices.asFloatBuffer();
-        mCubeVertices.put(DATA.CUBE_COORDS);
-        mCubeVertices.position(0);
-
-        ByteBuffer bbColors = ByteBuffer.allocateDirect(DATA.CUBE_COLORS.length * 4);
-        bbColors.order(ByteOrder.nativeOrder());
-        mCubeColors = bbColors.asFloatBuffer();
-        mCubeColors.put(DATA.CUBE_COLORS);
-        mCubeColors.position(0);
-
-        ByteBuffer bbFoundColors = ByteBuffer.allocateDirect(DATA.CUBE_FOUND_COLORS.length * 4);
-        bbFoundColors.order(ByteOrder.nativeOrder());
-        mCubeFoundColors = bbFoundColors.asFloatBuffer();
-        mCubeFoundColors.put(DATA.CUBE_FOUND_COLORS);
-        mCubeFoundColors.position(0);
-
-        ByteBuffer bbNormals = ByteBuffer.allocateDirect(DATA.CUBE_NORMALS.length * 4);
-        bbNormals.order(ByteOrder.nativeOrder());
-        mCubeNormals = bbNormals.asFloatBuffer();
-        mCubeNormals.put(DATA.CUBE_NORMALS);
-        mCubeNormals.position(0); */
-
-        // make a floor
-        /* ByteBuffer bbFloorVertices = ByteBuffer.allocateDirect(DATA.FLOOR_COORDS.length * 4);
-        bbFloorVertices.order(ByteOrder.nativeOrder());
-        mFloorVertices = bbFloorVertices.asFloatBuffer();
-        mFloorVertices.put(DATA.FLOOR_COORDS);
-        mFloorVertices.position(0);
-
-        ByteBuffer bbFloorNormals = ByteBuffer.allocateDirect(DATA.FLOOR_NORMALS.length * 4);
-        bbFloorNormals.order(ByteOrder.nativeOrder());
-        mFloorNormals = bbFloorNormals.asFloatBuffer();
-        mFloorNormals.put(DATA.FLOOR_NORMALS);
-        mFloorNormals.position(0);
-
-        ByteBuffer bbFloorColors = ByteBuffer.allocateDirect(DATA.FLOOR_COLORS.length * 4);
-        bbFloorColors.order(ByteOrder.nativeOrder());
-        mFloorColors = bbFloorColors.asFloatBuffer();
-        mFloorColors.put(DATA.FLOOR_COLORS);
-        mFloorColors.position(0); */
 
         // make wall
         ByteBuffer bbWallVertices = ByteBuffer.allocateDirect(DATA.WALL_COORDS.length * 4);

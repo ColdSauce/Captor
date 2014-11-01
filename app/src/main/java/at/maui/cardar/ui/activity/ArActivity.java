@@ -27,10 +27,6 @@ import at.maui.cardar.ui.widget.CardboardOverlayView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import timber.log.Timber;
-
-/**
- * Created by maui on 02.07.2014.
- */
 public class ArActivity extends CardboardActivity {
 
     @InjectView(R.id.overlay)
@@ -82,22 +78,6 @@ public class ArActivity extends CardboardActivity {
 
         s.setSpeechResultListener(new SpeechResultListener());
         s.setMaxRecordingTime(Integer.MAX_VALUE);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         final SpeechRecognizer speechRec = SpeechRecognizer.createSpeechRecognizer(this);
@@ -170,24 +150,6 @@ public class ArActivity extends CardboardActivity {
 
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
     public class SpeechResultListener implements ATTSpeechResultListener{
