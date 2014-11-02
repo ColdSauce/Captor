@@ -15,7 +15,7 @@ public class MyActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
-        startActivity(new Intent(MyActivity.this, HistoryActivity.class));
+        startActivity(new Intent(MyActivity.this, ArActivity.class));
 
     }
 }
