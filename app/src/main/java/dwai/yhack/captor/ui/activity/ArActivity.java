@@ -2,12 +2,15 @@ package dwai.yhack.captor.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.webkit.URLUtil;
 
 import com.att.android.speech.ATTSpeechActivity;
 import com.att.android.speech.ATTSpeechResult;
@@ -16,8 +19,18 @@ import com.att.android.speech.ATTSpeechService;
 import com.google.vrtoolkit.cardboard.CardboardActivity;
 import com.google.vrtoolkit.cardboard.CardboardView;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import dwai.yhack.captor.R;
 import dwai.yhack.captor.ui.ar.Renderer;
@@ -120,6 +133,23 @@ public class ArActivity extends CardboardActivity {
 
             @Override
             public void onResults(Bundle bundle) {
+
+                String someString = "";
+                List<String> listOfWords = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                for(String word :listOfWords){
+                    someString += word + "%20";
+                }
+                try{
+
+                    URLEncodedUtils.parse(new URI(someString),"UTF-8");
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+
+
+
+                new PostStuff().execute("http://captor.thupukair.com",someString);
                 try {
                     Thread.sleep(100);
                 } catch (Exception e) {
@@ -140,7 +170,7 @@ public class ArActivity extends CardboardActivity {
                     for (String p : results) {
                         b += p;
                     }
-               overlayView.show3DToast(b);
+                overlayView.show3DToast(b);
             }
 
             @Override
@@ -150,7 +180,40 @@ public class ArActivity extends CardboardActivity {
         });
     }
 
-    public class SpeechResultListener implements ATTSpeechResultListener{
+    private class PostStuff extends AsyncTask<String, Void, Void> {
+        @Override
+        protected Void doInBackground(String... strings) {
+
+            // Create a new HttpClient and Post Header
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost(HistoryActivity.URL + "/api/data?username=" + getMy10DigitPhoneNumber() + "&string="  + strings[1]);
+
+            try {
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+
+        }
+
+    }
+
+
+    public String getMy10DigitPhoneNumber() {
+        String s = getPhoneNumber();
+        return s != null && s.length() > 1 ? s.substring(1) : null;
+    }
+    private String getPhoneNumber() {
+        TelephonyManager tMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        String mPhoneNumber = tMgr.getLine1Number();
+
+        return mPhoneNumber;
+    }
+
+    public class SpeechResultListener implements ATTSpeechResultListener {
 
         @Override
         public void onResult(ATTSpeechResult attSpeechResult) {
@@ -159,7 +222,7 @@ public class ArActivity extends CardboardActivity {
         }
     }
 
-    public void startL(){
+    public void startL() {
         s.startListening();
 
     }
@@ -174,7 +237,7 @@ public class ArActivity extends CardboardActivity {
     private class OAuthResponseListener implements SpeechAuth.Client {
         public void
         handleResponse(String token, Exception error) {
-            Log.d(MY_ACTIVITY,token);
+            Log.d(MY_ACTIVITY, token);
             if (token != null) {
                 oauthToken = token;
 

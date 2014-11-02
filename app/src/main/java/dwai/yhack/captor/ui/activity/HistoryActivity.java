@@ -62,8 +62,7 @@ public class HistoryActivity extends Activity {
 
 
 
-//        new JSONParse().execute();
-        new PostStuff().execute("http://captor.thupukair.com");
+        new JSONParse().execute();
     }
 
     private String getPhoneNumber() {
@@ -140,27 +139,6 @@ public class HistoryActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-
-    private class PostStuff extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... strings) {
-
-            // Create a new HttpClient and Post Header
-            HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost(URL + "/api/data?username=" + getMy10DigitPhoneNumber() + "&string=" + "stuff");
-
-            try{
-                // Execute HTTP Post Request
-                HttpResponse response = httpclient.execute(httppost);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-
-
-        }
-
-    }
 
 
     public static final void setAppFont(ViewGroup mContainer, Typeface mFont, boolean reflect) {
