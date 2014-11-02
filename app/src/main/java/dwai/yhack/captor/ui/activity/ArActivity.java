@@ -28,6 +28,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.net.URI;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +50,6 @@ public class ArActivity extends CardboardActivity {
     private Renderer mRenderer;
 
     private String oauthToken = null;
-    private ATTSpeechService s;
     private Vibrator mVibrator;
     private int mScore = 0;
     private static final int SPEECH_REQUEST_CODE = 42;
@@ -62,7 +62,6 @@ public class ArActivity extends CardboardActivity {
 
         // Inject views
         ButterKnife.inject(this);
-        s = ATTSpeechService.getSpeechService(this);
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -75,20 +74,14 @@ public class ArActivity extends CardboardActivity {
 
         overlayView.show3DToast("Welcome to Captor!");
 
-        validateOAuth();
         Log.d(MY_ACTIVITY, oauthToken + "");
-        s.setSpeechContext("General");
         // Set the OAuth token that was fetched in the background.
 
         // Specify the speech context for this app.
 
 
-        s.setXArgs(
-                Collections.singletonMap("ClientScreen", "main"));
 
 
-        s.setSpeechResultListener(new SpeechResultListener());
-        s.setMaxRecordingTime(Integer.MAX_VALUE);
 
 
         final SpeechRecognizer speechRec = SpeechRecognizer.createSpeechRecognizer(this);
@@ -97,7 +90,7 @@ public class ArActivity extends CardboardActivity {
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "VoiceIME");
         intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 3000L);
+        intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_MINIMUM_LENGTH_MILLIS, 10000L);
 
         speechRec.startListening(intent);
         speechRec.setRecognitionListener(new RecognitionListener() {
@@ -136,17 +129,15 @@ public class ArActivity extends CardboardActivity {
 
                 String someString = "";
                 List<String> listOfWords = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                for(String word :listOfWords){
-                    someString += word + "%20";
-                }
+                someString = listOfWords.get(0);
                 try{
 
-                    URLEncodedUtils.parse(new URI(someString),"UTF-8");
+                   someString =  URLEncoder.encode(someString,"UTF-8");
+
                 }
                 catch(Exception e){
                     e.printStackTrace();
                 }
-
 
 
                 new PostStuff().execute("http://captor.thupukair.com",someString);
@@ -211,42 +202,6 @@ public class ArActivity extends CardboardActivity {
         String mPhoneNumber = tMgr.getLine1Number();
 
         return mPhoneNumber;
-    }
-
-    public class SpeechResultListener implements ATTSpeechResultListener {
-
-        @Override
-        public void onResult(ATTSpeechResult attSpeechResult) {
-
-            Log.d(MY_ACTIVITY, attSpeechResult.getTextStrings().toString());
-        }
-    }
-
-    public void startL() {
-        s.startListening();
-
-    }
-
-    private void validateOAuth() {
-        SpeechAuth auth =
-                SpeechAuth.forService(SpeechConfig.oauthUrl(), SpeechConfig.oauthScope(),
-                        SpeechConfig.oauthKey(), SpeechConfig.oauthSecret());
-        auth.fetchTo(new OAuthResponseListener());
-    }
-
-    private class OAuthResponseListener implements SpeechAuth.Client {
-        public void
-        handleResponse(String token, Exception error) {
-            Log.d(MY_ACTIVITY, token);
-            if (token != null) {
-                oauthToken = token;
-
-                s.setBearerAuthToken(oauthToken);
-                startL();
-            } else {
-                Log.v("SimpleSpeech", "OAuth error: " + error);
-            }
-        }
     }
 
 

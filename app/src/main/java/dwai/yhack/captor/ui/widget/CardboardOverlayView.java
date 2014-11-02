@@ -101,7 +101,7 @@ public class CardboardOverlayView extends LinearLayout {
             addView(imageView);
 
             textView = new TextView(context, attrs);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14.0f);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12.0f);
             textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
             textView.setGravity(Gravity.CENTER);
             textView.setShadowLayer(3.0f, 0.0f, 0.0f, Color.DKGRAY);
