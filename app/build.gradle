@@ -24,4 +24,5 @@ dependencies {
     compile 'com.jakewharton:butterknife:5.1.1'
     compile 'com.jakewharton.timber:timber:2.4.1'
     compile files('libs/ATTSpeechKit.jar')
+    compile files('libs/easyadapter-1.2.0.jar')
 }
