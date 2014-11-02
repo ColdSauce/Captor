@@ -1,17 +1,29 @@
 package dwai.yhack.captor.ui.activity;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.lang.reflect.Method;
+import java.sql.Array;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import dwai.yhack.captor.R;
+import uk.co.ribot.easyadapter.EasyAdapter;
 
 public class HistoryActivity extends Activity {
 
@@ -25,7 +37,27 @@ public class HistoryActivity extends Activity {
         final ViewGroup mContainer = (ViewGroup) findViewById(
                 android.R.id.content).getRootView();
         HistoryActivity.setAppFont(mContainer, mFont, true);
+        ListView lv = ((ListView)findViewById(R.id.rootListView));
+        final LinearLayout slideView = ((LinearLayout)findViewById(R.id.slideView));
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
+               R.drawable.kitten);
+        List<OneItem> items = new ArrayList<OneItem>();
+        for(int i = 0; i < 10;i++){
+            OneItem o = new OneItem(icon,"bobbysdfkjsbdflkjsbdfljkasbdflkjbsdfjhsbdfkjbsddfkjhbsddfkjhadsfkjhdsfkjadsfkjdfkjdsfkjsdfkjhdsfkjhadsfkjhbsdfkjhbasdfkjhbasdfkjhbadsfkjadsfkjhsdfkjhadsfkjhbadsfkjadsfkjadsfkjadsfkjadsfkjadsfkjadsfkjadsf".substring(0,150) + "..." + i, new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
+            items.add(o);
+        }
+         Collections.sort(items);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Animation slide =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
+                slideView.startAnimation(slide);
+            }
+        });
+        lv.setAdapter(new EasyAdapter<OneItem>(this, HistoryViewHolder.class, items));
+
     }
+
 
 
     @Override
