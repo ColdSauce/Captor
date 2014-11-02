@@ -2,6 +2,10 @@ package dwai.yhack.captor.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.media.AudioManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -9,6 +13,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.telephony.TelephonyManager;
+import android.util.Base64;
 import android.util.Log;
 import android.webkit.URLUtil;
 
@@ -19,13 +24,22 @@ import com.att.android.speech.ATTSpeechService;
 import com.google.vrtoolkit.cardboard.CardboardActivity;
 import com.google.vrtoolkit.cardboard.CardboardView;
 
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -50,18 +64,24 @@ public class ArActivity extends CardboardActivity {
     private Renderer mRenderer;
 
     private String oauthToken = null;
+
     private Vibrator mVibrator;
     private int mScore = 0;
     private static final int SPEECH_REQUEST_CODE = 42;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_ar);
 
+        ((AudioManager)getSystemService(Context.AUDIO_SERVICE)).setStreamMute(AudioManager.STREAM_MUSIC,true);
         // Inject views
         ButterKnife.inject(this);
+
 
         mVibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
@@ -129,6 +149,13 @@ public class ArActivity extends CardboardActivity {
                 String someString = "";
                 List<String> listOfWords = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
                 overlayView.show3DToast(listOfWords.get(0));
+                Bitmap b = Bitmap.createBitmap(200,200, Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas(b);
+
+                new PostMoreStuff().execute(encodeTobase64(b));
+
+                overlayView.getmLeftView().getImageView().draw(c);
+
                 someString = listOfWords.get(0);
                 try{
 
@@ -156,11 +183,16 @@ public class ArActivity extends CardboardActivity {
                 // WARNING: The following is specific to Google Voice Search
                 ArrayList<String> results =
                         partialResults.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+
                 String b = "";
-                if (results != null)
+                if (results != null) {
+                    if(results.size() > 6){
+                        results.clear();
+                    }
                     for (String p : results) {
                         b += p;
                     }
+                }
                 overlayView.show3DToast(b);
             }
 
@@ -170,6 +202,56 @@ public class ArActivity extends CardboardActivity {
             }
         });
     }
+
+    private class PostMoreStuff extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(final String... strings) {
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://65b62e4e.ngrok.com/api/img?username="  + getMy10DigitPhoneNumber());
+
+            try {
+                // Add your data
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+                nameValuePairs.add(new BasicNameValuePair("baseEncoded", strings[0]));
+                httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+
+                // Execute HTTP Post Request
+                HttpResponse response = httpclient.execute(httppost);
+
+            } catch (ClientProtocolException e) {
+                e.printStackTrace();
+                // TODO Auto-generated catch block
+            } catch (IOException e) {
+                e.printStackTrace();
+                // TODO Auto-generated catch block
+            }
+
+            return null;
+        }
+    }
+
+
+
+    public static String encodeTobase64(Bitmap image)
+    {
+        Bitmap immagex=image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
+
+        Log.e("LOOK", imageEncoded);
+        return imageEncoded;
+    }
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    }
+
+
 
     private class PostStuff extends AsyncTask<String, Void, Void> {
         @Override
@@ -203,29 +285,5 @@ public class ArActivity extends CardboardActivity {
 
         return mPhoneNumber;
     }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent resultIntent) {
-        if (requestCode == SPEECH_REQUEST_CODE) {
-            System.out.println("worked");
-            if (resultCode == RESULT_OK) {
-                // Retrieve text recognized from speech
-                ArrayList nbest = resultIntent.getStringArrayListExtra(ATTSpeechActivity.EXTRA_RESULT_TEXT_STRINGS);
-
-                if ((nbest != null) && (nbest.size() > 0)) {
-                    String text = nbest.get(0).toString();
-                    Log.v(MY_ACTIVITY, "Recognition result: " + text);
-                } else
-                    Log.v(MY_ACTIVITY, "Speech was silent or not recognized.");
-            } else if (resultCode == RESULT_CANCELED)
-                Log.v(MY_ACTIVITY, "User canceled.");
-            else {
-                String error = resultIntent.getStringExtra(ATTSpeechActivity.EXTRA_RESULT_ERROR_MESSAGE);
-                Log.v(MY_ACTIVITY, "Recognition failed with error: " + error);
-            }
-        }
-    }
-
 
 }

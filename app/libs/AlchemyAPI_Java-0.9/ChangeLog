@@ -1,0 +1,14 @@
+CHANGELOG
+
+0.9 - Added support for combined call, ranked taxonomy & image extraction.
+0.8 - Added support for author extraction & targeted sentiment.
+0.7 - Added support for relations extraction.
+0.6 - Added support for sentiment analysis.
+0.5 - Added GetRankedConcepts calls and parameter object.
+0.4.2 - Added Parameters, added RDF support
+0.4.1 - Fixed compilation error in Entities example code.
+0.4 - Added GetRankedKeywords calls, added TextGetCategory call.
+0.3 - Added ConstraintQuery call, imports changes, exception reporting
+      changes, general improvements.
+0.2 - Added setApiKey() call, setApiHost() call, updated API endpoint.
+0.1 - Initial Release

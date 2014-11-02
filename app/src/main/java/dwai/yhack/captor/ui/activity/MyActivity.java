@@ -15,8 +15,10 @@ public class MyActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
+
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -35,4 +37,5 @@ public class MyActivity extends Activity {
     public void startHistory(View view) {
         startActivity(new Intent(MyActivity.this, HistoryActivity.class));
     }
+
 }

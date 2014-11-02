@@ -18,6 +18,11 @@ public class CardboardOverlayView extends LinearLayout {
     private static final String TAG = CardboardOverlayView.class.getSimpleName();
     private final CardboardOverlayEyeView mLeftView;
     private final CardboardOverlayEyeView mRightView;
+
+    public CardboardOverlayEyeView getmLeftView() {
+        return mLeftView;
+    }
+
     private AlphaAnimation mTextFadeAnimation;
 
     public CardboardOverlayView(Context context, AttributeSet attrs) {
@@ -88,9 +93,14 @@ public class CardboardOverlayView extends LinearLayout {
      *
      * This is a helper class for CardboardOverlayView.
      */
-    private class CardboardOverlayEyeView extends ViewGroup {
+    public class CardboardOverlayEyeView extends ViewGroup {
         private final ImageView imageView;
         private final TextView textView;
+
+        public ImageView getImageView() {
+            return imageView;
+        }
+
         private float offset;
 
         public CardboardOverlayEyeView(Context context, AttributeSet attrs) {

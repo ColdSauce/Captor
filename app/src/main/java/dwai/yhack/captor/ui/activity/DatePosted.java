@@ -76,27 +76,30 @@ public class DatePosted implements Comparable<DatePosted>{
     }
 
 
-    @Override
-    public String toString() {
-        StringBuffer finalString = new StringBuffer();
-
-        List<Integer> allCombined = new ArrayList<Integer>();
-        allCombined.add(year);
-        allCombined.add(month);
-        allCombined.add(day);
-        allCombined.add(hour);
-        allCombined.add(minute);
-        allCombined.add(second);
-        String[] shortened = new String[]{"yr, ", "mnth, ", "d, ", "h, ", "min, ", "s"};
-
-        for(int i = 0; i < allCombined.size();i++){
-            int oneCombined = allCombined.get(i);
-            if(oneCombined >= 0){
-                finalString.append(oneCombined + " " + shortened[i]);
-            }
-        }
-        return finalString.toString();
-
-
+//    @Override
+//    public String toString() {
+//        StringBuffer finalString = new StringBuffer();
+//
+//        List<Integer> allCombined = new ArrayList<Integer>();
+//        allCombined.add(year);
+//        allCombined.add(month);
+//        allCombined.add(day);
+//        allCombined.add(hour);
+//        allCombined.add(minute);
+//        allCombined.add(second);
+//        String[] shortened = new String[]{"yr, ", "mnth, ", "d, ", "h, ", "min, ", "s"};
+//
+//        for(int i = 0; i < allCombined.size();i++){
+//            int oneCombined = allCombined.get(i);
+//            if(oneCombined >= 0){
+//                finalString.append(oneCombined + " " + shortened[i]);
+//            }
+//        }
+//        return finalString.toString();
+//
+//
+//    }
+    public String toString(){
+        return month + "/" + day + "/" + year;
     }
 }

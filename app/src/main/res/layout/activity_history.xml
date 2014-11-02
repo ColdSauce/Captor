@@ -21,6 +21,17 @@
 
 
         </LinearLayout>
+    <ImageView
+        android:clickable="true"
+        android:onClick="clickedCardboardIcon"
+        android:src="@drawable/cardboard_b"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        />
 
 
 </RelativeLayout>

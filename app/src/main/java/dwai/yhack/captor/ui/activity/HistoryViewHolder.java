@@ -1,5 +1,7 @@
 package dwai.yhack.captor.ui.activity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +37,8 @@ public class HistoryViewHolder extends ItemViewHolder<OneItem>{
 
     @Override
     public void onSetValues(OneItem oneItem, PositionInfo positionInfo) {
-
         imageItem.setImageBitmap(oneItem.getImage());
+//        imageItem.setImageDrawable(getContext().getResources().getDrawable(android.R.color.white));
         dateText.setText(oneItem.getDatePosted().toString());
         mainText.setText(oneItem.getText());
 

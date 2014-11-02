@@ -1,0 +1,44 @@
+<project name="AlchemyAPI" default="compile" basedir=".">
+	<description>
+		Build file for AlchemyAPI code / examples.
+	</description>
+  
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+	<property name="dist" location="dist"/>
+	
+  
+	<target name="clean">
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+	</target>
+  
+	<target name="prepare">
+		<tstamp/>
+		<mkdir dir="${bin}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+	
+	<target name="compile" depends="prepare">
+		<javac srcdir="${src}" destdir="${bin}" debug="true" debuglevel="lines,vars,source" includeantruntime="false">
+			<exclude name="**/test/**"/>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar jarfile="${dist}/AlchemyAPI.jar">
+			<fileset dir="${bin}">
+				<include name="**/api/*.class"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="package" depends="jar">
+		<zip destfile="${dist}/AlchemyAPI_Java-0.9.zip">
+			<zipfileset dir="." includes="README, build.xml" prefix="AlchemyAPI"/>
+			<zipfileset dir="${src}" prefix="AlchemyAPI/src"/>
+			<zipfileset dir="${dist}" includes="AlchemyAPI.jar" prefix="AlchemyAPI"/>
+		</zip>
+	</target>
+</project>
+

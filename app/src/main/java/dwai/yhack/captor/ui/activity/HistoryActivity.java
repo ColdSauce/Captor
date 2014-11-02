@@ -1,7 +1,9 @@
 package dwai.yhack.captor.ui.activity;
 
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import org.apache.http.HttpResponse;
@@ -50,7 +53,9 @@ import uk.co.ribot.easyadapter.EasyAdapter;
 public class HistoryActivity extends Activity {
 
     public static final String URL = "http://captor.thupukari.com";
+    private ListView lv;
 
+    private List<OneItem> items = new ArrayList<OneItem>();
     private static final String TAG_TEXT = "text";
     private static final String TAG_DATE = "date";
 
@@ -104,24 +109,27 @@ public class HistoryActivity extends Activity {
         protected void onPostExecute(JSONArray json) {
             //pDialog.dismiss();
             Log.d("Joe", "hi");
-            List<OneItem> items = new ArrayList<OneItem>();
             Bitmap icon = BitmapFactory.decodeResource(getResources(),
                     R.drawable.kitten);
             final LinearLayout slideView = ((LinearLayout) findViewById(R.id.slideView));
             try {
                 for (int i = 0; i < json.length(); i++) {
-                    String dateString = json.getJSONObject(i).getString("date");
 //
+                    String year = json.getJSONObject(i).getJSONObject("date").getString("year");
+                    String month = json.getJSONObject(i).getJSONObject("date").getString("month");
+                    String day = json.getJSONObject(i).getJSONObject("date").getString("day");
+
 //                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm+s:SSSS");
 //                    Date date = format.parse(dateString);
 //                    format = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
 //                    dateString = format.format(date);
 
-                    OneItem o = new OneItem(icon, json.getJSONObject(i).getString("text") + "..." , new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
+
+                    OneItem o = new OneItem(icon, json.getJSONObject(i).getString("text") + "..." , new DatePosted().setYear(Integer.parseInt(year)).setMonth(Integer.parseInt(month)).setDay(Integer.parseInt(day)));
                     items.add(o);
                 }
                 Collections.sort(items);
-                ListView lv = ((ListView) findViewById(R.id.rootListView));
+                lv = ((ListView) findViewById(R.id.rootListView));
                 lv.setAdapter(new EasyAdapter<OneItem>(getApplicationContext(), HistoryViewHolder.class, items));
             } catch (Exception e) {
                 Log.d("Joe", "hello");
@@ -130,12 +138,45 @@ public class HistoryActivity extends Activity {
         }
     }
 
+    public void clickedCardboardIcon(View v){
+        startActivity(new Intent(HistoryActivity.this,ArActivity.class));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.history, menu);
-        return true;
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search)
+                .getActionView();
+        if (null != searchView) {
+            searchView.setSearchableInfo(searchManager
+                    .getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+        }
+
+        SearchView.OnQueryTextListener queryTextListener = new SearchView.OnQueryTextListener() {
+            public boolean onQueryTextChange(String newText) {
+                List<OneItem> newItems = new ArrayList<OneItem>();
+                for(OneItem item : items){
+
+                    if(item.getText().toLowerCase().contains(newText.toLowerCase())){
+                        newItems.add(item);
+                    }
+                }
+                lv.setAdapter(new EasyAdapter<OneItem>(getApplicationContext(), HistoryViewHolder.class, newItems));
+                return true;
+            }
+
+            public boolean onQueryTextSubmit(String query) {
+                //Here u can get the value "query" which is entered in the search box.
+                return true;
+
+            }
+        };
+        searchView.setOnQueryTextListener(queryTextListener);
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

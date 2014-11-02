@@ -1,0 +1,196 @@
+<project name="AlchemyAPI" default="compile" basedir=".">
+	<description>
+		Build file for AlchemyAPI code / examples.
+	</description>
+  
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+	<property name="dist"  location="dist"/>
+	
+  
+	<target name="clean">
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+	</target>
+  
+	<target name="prepare">
+		<tstamp/>
+		<mkdir dir="${bin}"/>
+		<mkdir dir="${dist}"/>
+	</target>
+	
+	<target name="compile" depends="prepare">
+		<javac srcdir="${src}" destdir="${bin}" debug="true" debuglevel="lines,vars,source" includeantruntime="false">
+		<classpath>
+			<pathelement path="${classpath}/"/>
+		</classpath>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<jar jarfile="${dist}/AlchemyAPI.jar">
+			<fileset dir="${bin}">
+				<include name="**/api/*.class"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-FeedLinks-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.FeedLinksTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/FeedLink**"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-Microformats-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.MicroformatsTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Microformat**"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-Language-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.LanguageTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Language**"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-Concept-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.ConceptTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Concept**"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-Keyword-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.KeywordTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Keyword**"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-Category-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.CategoryTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Category**"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-TextExtract-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.TextExtractTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/TextExtract**"/>
+			</fileset>
+		</jar>
+	 	
+		<jar jarfile="${dist}/AlchemyAPI-Entity-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.EntityTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Entity**"/>
+			</fileset>
+		</jar>
+
+		<jar jarfile="${dist}/AlchemyAPI-ConstraintQuery-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.ConstraintQueryTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/ConstraintQuery**"/>
+			</fileset>
+		</jar>
+		
+		<jar jarfile="${dist}/AlchemyAPI-Sentiment-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.SentimentTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Sentiment**"/>
+			</fileset>
+		</jar>
+		
+		<jar jarfile="${dist}/AlchemyAPI-Relations-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.RelationsTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Relations**"/>
+			</fileset>
+		</jar>
+		
+		<jar jarfile="${dist}/AlchemyAPI-Parameter-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.ParameterTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Parameter**"/>
+			</fileset>
+		</jar>
+
+		<jar jarfile="${dist}/AlchemyAPI-Combined-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.CombinedTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Combined**"/>
+			</fileset>
+		</jar>
+
+		<jar jarfile="${dist}/AlchemyAPI-Taxonomy-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.TaxonomyTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Taxonomy**"/>
+			</fileset>
+		</jar>
+
+		<jar jarfile="${dist}/AlchemyAPI-Image-Test.jar">
+			<manifest>
+				<attribute name="Main-Class" value="com.alchemyapi.test.ImageTest"/>
+				<attribute name="Class-Path" value="AlchemyAPI.jar"/>
+			</manifest>
+			<fileset dir="${bin}">
+				<include name="**/test/Image**"/>
+			</fileset>
+		</jar>
+	</target>
+	
+	<target name="package" depends="jar">
+		<zip destfile="${dist}/AlchemyAPI_Java-0.9.zip">
+			<zipfileset dir="." includes="README, build.xml" prefix="AlchemyAPI"/>
+			<zipfileset dir="${src}" prefix="AlchemyAPI/src"/>
+			<zipfileset dir="${dist}" includes="AlchemyAPI.jar, AlchemyAPI-FeedLinks-Test.jar, AlchemyAPI-Microformats-Test.jar, AlchemyAPI-Language-Test.jar, AlchemyAPI-Keyword-Test.jar, AlchemyAPI-Category-Test.jar, AlchemyAPI-Concept-Test.jar, AlchemyAPI-TextExtract-Test.jar, AlchemyAPI-Entity-Test.jar, AlchemyAPI-ConstraintQuery-Test.jar, AlchemyAPI-Parameter-Test.jar, AlchemyAPI-Combined-Test.jar, AlchemyAPI-Taxonomy-Test.jar, AlchemyAPI-Image-Test.jar" prefix="AlchemyAPI"/>
+		</zip>
+	</target>
+</project>
+

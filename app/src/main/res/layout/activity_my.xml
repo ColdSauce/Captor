@@ -9,11 +9,12 @@
     <ImageButton
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="20dp"
         android:layout_weight="0.4"
         android:id="@+id/imageButton"
         android:layout_alignParentTop="true"
         android:src="@drawable/cardboard_splash"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:background="#2078E7"
         android:onClick="startCardBoard"/>
 
@@ -31,8 +32,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.4"
+        android:layout_margin="20dp"
         android:src="@drawable/history_button"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:background="#2078E7"
         android:onClick="startHistory"/>
 
