@@ -1,13 +1,10 @@
 package dwai.yhack.captor.ui.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -17,39 +14,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
 
 import dwai.yhack.captor.R;
-import retrofit.RestAdapter;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import dwai.yhack.captor.R;
 import uk.co.ribot.easyadapter.EasyAdapter;
 
 public class HistoryActivity extends Activity {
@@ -70,24 +49,7 @@ public class HistoryActivity extends Activity {
                 android.R.id.content).getRootView();
         HistoryActivity.setAppFont(mContainer, mFont, true);
 
-        ListView lv = ((ListView)findViewById(R.id.rootListView));
-        final LinearLayout slideView = ((LinearLayout)findViewById(R.id.slideView));
-        Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
-                R.drawable.kitten);
-        List<OneItem> items = new ArrayList<OneItem>();
-        for(int i = 0; i < 10;i++){
-            OneItem o = new OneItem(icon,"bobbysdfkjsbdflkjsbdfljkasbdflkjbsdfjhsbdfkjbsddfkjhbsddfkjhadsfkjhdsfkjadsfkjdfkjdsfkjsdfkjhdsfkjhadsfkjhbsdfkjhbasdfkjhbasdfkjhbadsfkjadsfkjhsdfkjhadsfkjhbadsfkjadsfkjadsfkjadsfkjadsfkjadsfkjadsfkjadsf".substring(0,150) + "..." + i, new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
-            items.add(o);
-        }
-        Collections.sort(items);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Animation slide =  AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slide_up);
-                slideView.startAnimation(slide);
-            }
-        });
-        lv.setAdapter(new EasyAdapter<OneItem>(this, HistoryViewHolder.class, items));
+
 
         new JSONParse().execute();
 
@@ -126,9 +88,22 @@ public class HistoryActivity extends Activity {
         @Override
         protected void onPostExecute(JSONArray json) {
             //pDialog.dismiss();
+            Log.d("Joe", "hi");
+            List<OneItem> items = new ArrayList<OneItem>();
+            Bitmap icon = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.kitten);
+            final LinearLayout slideView = ((LinearLayout)findViewById(R.id.slideView));
             try {
-                
+                for(int i = 0; i < json.length(); i++) {
+                    OneItem o = new OneItem(icon,json.getJSONObject(i).getString("text").substring(0,19) + "..." + i, new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
+                    items.add(o);
+                }
+                Collections.sort(items);
+                ListView lv = ((ListView)findViewById(R.id.rootListView));
+                Log.d("Joe", "kkkkkkkkk" +items.toString());
+                lv.setAdapter(new EasyAdapter<OneItem>(getApplicationContext(), HistoryViewHolder.class, items));
             } catch (Exception e) {
+                Log.d("Joe", "hello");
                 e.printStackTrace();
             }
         }

@@ -36,7 +36,7 @@
             android:screenOrientation="landscape"
             android:configChanges="orientation|keyboardHidden">
         </activity>
-        <activity android:name=".ui.activity.HistoryActivity"
+        <activity android:name="dwai.yhack.captor.ui.activity.HistoryActivity"
             android:icon="@drawable/ic_history_black_48dp"
             android:label = "History"
             android:screenOrientation="portrait"
