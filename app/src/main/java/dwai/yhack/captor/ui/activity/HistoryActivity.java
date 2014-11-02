@@ -95,7 +95,7 @@ public class HistoryActivity extends Activity {
             final LinearLayout slideView = ((LinearLayout)findViewById(R.id.slideView));
             try {
                 for(int i = 0; i < json.length(); i++) {
-                    OneItem o = new OneItem(icon,json.getJSONObject(i).getString("text").substring(0,19) + "..." + i, new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
+                    OneItem o = new OneItem(icon,json.getJSONObject(i).getString("text") + "..." + i, new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
                     items.add(o);
                 }
                 Collections.sort(items);
