@@ -128,6 +128,7 @@ public class ArActivity extends CardboardActivity {
 
                 String someString = "";
                 List<String> listOfWords = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                overlayView.show3DToast(listOfWords.get(0));
                 someString = listOfWords.get(0);
                 try{
 

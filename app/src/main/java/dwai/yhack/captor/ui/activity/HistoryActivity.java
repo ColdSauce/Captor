@@ -117,12 +117,11 @@ public class HistoryActivity extends Activity {
 //                    format = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
 //                    dateString = format.format(date);
 
-                    OneItem o = new OneItem(icon, json.getJSONObject(i).getString("text") + "..." + i, new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
+                    OneItem o = new OneItem(icon, json.getJSONObject(i).getString("text") + "..." , new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
                     items.add(o);
                 }
                 Collections.sort(items);
                 ListView lv = ((ListView) findViewById(R.id.rootListView));
-                Log.d("Joe", "kkkkkkkkk" + items.toString());
                 lv.setAdapter(new EasyAdapter<OneItem>(getApplicationContext(), HistoryViewHolder.class, items));
             } catch (Exception e) {
                 Log.d("Joe", "hello");
