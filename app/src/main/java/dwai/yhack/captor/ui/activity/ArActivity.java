@@ -74,7 +74,6 @@ public class ArActivity extends CardboardActivity {
 
         overlayView.show3DToast("Welcome to Captor!");
 
-        Log.d(MY_ACTIVITY, oauthToken + "");
         // Set the OAuth token that was fetched in the background.
 
         // Specify the speech context for this app.

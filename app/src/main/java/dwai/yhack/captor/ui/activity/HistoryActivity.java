@@ -32,6 +32,11 @@ import org.json.JSONArray;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import dwai.yhack.captor.R;
@@ -105,6 +110,13 @@ public class HistoryActivity extends Activity {
             final LinearLayout slideView = ((LinearLayout) findViewById(R.id.slideView));
             try {
                 for (int i = 0; i < json.length(); i++) {
+                    String dateString = json.getJSONObject(i).getString("date");
+//
+//                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm+s:SSSS");
+//                    Date date = format.parse(dateString);
+//                    format = new SimpleDateFormat("MM-dd-yyyy hh:mm a");
+//                    dateString = format.format(date);
+
                     OneItem o = new OneItem(icon, json.getJSONObject(i).getString("text") + "..." + i, new DatePosted().setYear(2).setMonth(3).setDay(23).setHour(12).setMinute(13).setSecond(24));
                     items.add(o);
                 }
