@@ -5,10 +5,22 @@
     tools:context="dwai.yhack.captor.ui.activity.HistoryActivity">
 
     <ListView
+        android:id = "@+id/rootListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         </ListView>
+    <LinearLayout
+        android:id = "@+id/slideView"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:background="#ccc"
+
+        android:layout_height="300dp">
+
+
+        </LinearLayout>
 
 
 </RelativeLayout>
