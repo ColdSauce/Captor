@@ -56,8 +56,6 @@ public class HistoryActivity extends Activity {
     private ListView lv;
 
     private List<OneItem> items = new ArrayList<OneItem>();
-    private static final String TAG_TEXT = "text";
-    private static final String TAG_DATE = "date";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,10 +109,8 @@ public class HistoryActivity extends Activity {
             Log.d("Joe", "hi");
             Bitmap icon = BitmapFactory.decodeResource(getResources(),
                     R.drawable.kitten);
-            final LinearLayout slideView = ((LinearLayout) findViewById(R.id.slideView));
             try {
                 for (int i = 0; i < json.length(); i++) {
-//
                     String year = json.getJSONObject(i).getJSONObject("date").getString("year");
                     String month = json.getJSONObject(i).getJSONObject("date").getString("month");
                     String day = json.getJSONObject(i).getJSONObject("date").getString("day");

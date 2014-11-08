@@ -15,36 +15,23 @@ import android.speech.SpeechRecognizer;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
-import android.webkit.URLUtil;
 
-import com.att.android.speech.ATTSpeechActivity;
-import com.att.android.speech.ATTSpeechResult;
-import com.att.android.speech.ATTSpeechResultListener;
-import com.att.android.speech.ATTSpeechService;
 import com.google.vrtoolkit.cardboard.CardboardActivity;
 import com.google.vrtoolkit.cardboard.CardboardView;
 
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import dwai.yhack.captor.R;
@@ -60,14 +47,10 @@ public class ArActivity extends CardboardActivity {
 
     @InjectView(R.id.cardboard_view)
     CardboardView cardboardView;
-    private String MY_ACTIVITY = "ARActivity";
+    //private String MY_ACTIVITY = "ARActivity";
     private Renderer mRenderer;
 
-    private String oauthToken = null;
-
     private Vibrator mVibrator;
-    private int mScore = 0;
-    private static final int SPEECH_REQUEST_CODE = 42;
 
 
 
@@ -93,10 +76,6 @@ public class ArActivity extends CardboardActivity {
         setCardboardView(cardboardView);
 
         overlayView.show3DToast("Welcome to Captor!");
-
-        // Set the OAuth token that was fetched in the background.
-
-        // Specify the speech context for this app.
 
 
 
@@ -222,10 +201,8 @@ public class ArActivity extends CardboardActivity {
 
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
-                // TODO Auto-generated catch block
             } catch (IOException e) {
                 e.printStackTrace();
-                // TODO Auto-generated catch block
             }
 
             return null;
