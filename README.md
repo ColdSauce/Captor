@@ -1,10 +1,10 @@
 # Captor
 
-##WARNING: This code was built at a hackathon, therefore it is the most convoluted and messy code you will ever see. I am cleaning it up as you read this sentence! 
+## WARNING: This code was built at a hackathon, therefore it is the most convoluted and messy code you will ever see. I might fix in in the future but for right now, it is what it is.
 
 If you would like to contribute, check out the issues of this repo and try to fix one!
 
-##What is this?
+## What is this?
   Automatic subtitles for the deaf using Google Cardboard. You can check out a video demo of it [here](https://www.youtube.com/watch?v=7iE2NuSeD9c)
 
 Built at YHack 2014 by Stefan, Fisher, Sashank and Alex.
